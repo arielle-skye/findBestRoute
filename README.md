@@ -57,7 +57,7 @@ def fetch_weather(id):
     return City(city_name, tmp_list)
 
   except requests.ConnectionError as e:
-    print("Connection Error. Make sure you are connected to Internet. Technical Details given below.\n")
+    print("Connection Error. Make sure you are connected to the Internet. Technical Details given below.\n")
     print(str(e)) 
    
   except ValueError:
@@ -74,19 +74,26 @@ if __name__ == "__main__":
 
   print("Here are all the possible routes and their average temperatures:\n")
 
-  id_list = json.loads(open("cities.json").read()) #retrieve city id's from .json file
-  possible_routes = list(permutations(id_list)) #creates all possible routes
-  lowest_temp = 1000 #not a great way to do this...sets lowest temp to something unreasonably high for comparison. needs improvement
+  #retrieve city id's from .json file
+  id_list = json.loads(open("cities.json").read()) 
+  #creates all possible routes
+  possible_routes = list(permutations(id_list))
+  #prepares a lowest avg temp and optimal route. needs improvement
+  lowest_temp = 1000 
   best_route = None
 
-  for a_route in possible_routes: #for a city list in the permutation list
-    cities = [fetch_weather(id) for id in a_route] #gets daily max temps for each city in a city list
-    avg_temp = Route(cities).avg_max_temps() #gets total avg of city list
-    current_route = Route(cities) #sets current route
-  
-    if lowest_temp >= avg_temp: #sets lowest_temp to lowest of avg temps
+  for a_route in possible_routes: #i.e. for a city list in the permutation list
+    #gets daily max temps for each city in a city list
+    cities = [fetch_weather(id) for id in a_route] 
+    #gets total avg of city list
+    avg_temp = Route(cities).avg_max_temps() 
+    #sets current route
+    current_route = Route(cities) 
+    
+    #sets lowest_temp to lowest of avg temps and best_route to route w/lowest avg temp
+    if lowest_temp >= avg_temp: 
       lowest_temp = avg_temp
-      best_route = current_route #sets best_route to route with lowest of avg temps
+      best_route = current_route 
 
     #prints city names with total avg temp for route
     for i in range(len(cities)):
